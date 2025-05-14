@@ -1,9 +1,9 @@
-package org.example.fundrising.collectionbox;
+package org.example.fundraising.collectionbox;
 
 
 import jakarta.validation.Valid;
-import org.example.fundrising.collectionbox.dto.ListCollectionBoxResponse;
-import org.example.fundrising.collectionbox.dto.RegisterCollectionBoxRequest;
+import org.example.fundraising.collectionbox.dto.ListCollectionBoxResponse;
+import org.example.fundraising.collectionbox.dto.RegisterCollectionBoxRequest;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

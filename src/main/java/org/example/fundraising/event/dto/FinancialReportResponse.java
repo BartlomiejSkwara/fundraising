@@ -1,4 +1,4 @@
-package org.example.fundrising.event.dto;
+package org.example.fundraising.event.dto;
 
 public record FinancialReportResponse() {
 }
