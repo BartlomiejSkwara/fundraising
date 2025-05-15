@@ -6,6 +6,10 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.fundraising.event.EventEntity;
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+
 @Entity
 @Getter
 @Setter
@@ -16,7 +20,13 @@ public class CollectionBoxEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne()
     private EventEntity event;
+
+    @ElementCollection()
+    @CollectionTable(name = "currency_balance")
+    @MapKeyColumn(name = "currency", length = 3)
+    @Column(nullable = false)
+    private Map<String, BigDecimal> currencies;
 
 }

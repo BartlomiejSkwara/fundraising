@@ -1,21 +1,20 @@
 package org.example.fundraising.collectionbox;
 
 
-import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.example.fundraising.collectionbox.dto.ListCollectionBoxResponse;
-import org.example.fundraising.collectionbox.dto.RegisterCollectionBoxRequest;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/collectionBox")
+@RequiredArgsConstructor
 public class CollectionBoxController {
 
-    @PostMapping()
-    public void registerBox(
-            @Valid @RequestBody
-            RegisterCollectionBoxRequest request
-    ) {
+    private final CollectionBoxService collectionBoxService;
 
+    @PostMapping()
+    public void registerNewBox() {
+        collectionBoxService.registerCollectionBox();
     }
 
     @GetMapping("/listAll")
