@@ -1,5 +1,6 @@
 package org.example.fundraising.common;
 
+import org.example.fundraising.common.exceptions.IllegalCurrencyException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.FieldError;
@@ -23,5 +24,11 @@ public class GlobalExceptionHandler {
         });
         return ResponseEntity.badRequest().body(errors);
     }
+
+    @ExceptionHandler(IllegalCurrencyException.class)
+    public ResponseEntity<String> handleIllegalCurrencyException(IllegalCurrencyException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
 
 }

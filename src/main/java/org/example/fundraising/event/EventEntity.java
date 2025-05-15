@@ -1,10 +1,9 @@
 package org.example.fundraising.event;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.math.BigDecimal;
 
 
 @Entity
@@ -18,8 +17,14 @@ public class EventEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(length = 3,nullable = false)
     private String currency;
-    private Double balance;
+
+    @Column(nullable = false)
+    private BigDecimal balance;
+
+    @Column(nullable = false)
     private String name;
 
 }

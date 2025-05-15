@@ -1,5 +1,6 @@
 package org.example.fundraising.event;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.fundraising.event.dto.CreateEventRequest;
