@@ -20,8 +20,10 @@ public class CollectionBoxController {
     private final CollectionBoxService collectionBoxService;
 
     @PostMapping()
-    public void registerNewBox() {
+    public ResponseEntity<Void> registerNewBox() {
         collectionBoxService.registerCollectionBox();
+        System.out.println("Registered new collection box");
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/listAll")
@@ -30,8 +32,9 @@ public class CollectionBoxController {
     }
 
     @DeleteMapping("/{id}")
-    public void unregisterBox(@PathVariable Long id) {
-
+    public ResponseEntity<Void> unregisterBox(@PathVariable Long id) {
+        collectionBoxService.unregisterBox(id);
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{boxId}/event/{eventId}")
@@ -48,6 +51,7 @@ public class CollectionBoxController {
             @RequestBody @Valid AddCashToBoxRequest addCashToBoxRequest
     ) {
         collectionBoxService.addCash(id,addCashToBoxRequest.currencyCode(),new BigDecimal(addCashToBoxRequest.cashAmount()));
+        System.out.println("cash added");
         return ResponseEntity.ok().build();
     }
 

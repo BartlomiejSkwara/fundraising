@@ -42,7 +42,7 @@ public class CollectionBoxServiceTest {
 
     @Test
     public void addCashWithWrongIdTest(){
-        when(collectionBoxRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(collectionBoxRepository.findByIdAndFetchCurrencies(anyLong())).thenReturn(Optional.empty());
         when(exchangeRateService.isCurrencyNoted(any())).thenReturn(true);
 
         assertThrows(CollectionBoxNotFoundException.class, () -> collectionBoxService.addCash(2L,"EUR",new BigDecimal("10.0")));
@@ -58,7 +58,7 @@ public class CollectionBoxServiceTest {
         AddCashToBoxRequest addedCash = new AddCashToBoxRequest("PLN","20.0");
 
         when(exchangeRateService.isCurrencyNoted(any())).thenReturn(true);
-        when(collectionBoxRepository.findById(anyLong())).thenReturn(Optional.of(retrievedBox));
+        when(collectionBoxRepository.findByIdAndFetchCurrencies(anyLong())).thenReturn(Optional.of(retrievedBox));
 
         collectionBoxService.addCash(1L,addedCash.currencyCode(),new BigDecimal(addedCash.cashAmount()));
 
@@ -83,7 +83,7 @@ public class CollectionBoxServiceTest {
         AddCashToBoxRequest addedCash = new AddCashToBoxRequest("PLN","15.0");
 
         when(exchangeRateService.isCurrencyNoted(any())).thenReturn(true);
-        when(collectionBoxRepository.findById(anyLong())).thenReturn(Optional.of(retrievedBox));
+        when(collectionBoxRepository.findByIdAndFetchCurrencies(anyLong())).thenReturn(Optional.of(retrievedBox));
 
         collectionBoxService.addCash(1L,addedCash.currencyCode(),new BigDecimal(addedCash.cashAmount()));
 
@@ -99,12 +99,26 @@ public class CollectionBoxServiceTest {
     }
 
     @Test
-    public void addCashWithWrongCurrencyTest(){
+    public void  addCashWithWrongCurrencyTest(){
         when(exchangeRateService.isCurrencyNoted(any())).thenReturn(false);
         assertThrows(IllegalCurrencyException.class, () -> collectionBoxService.addCash(2L,"ERR",new BigDecimal("10.0")));
         verify(collectionBoxRepository,times(0)).save(any());
     }
 
+
+    @Test
+    public void unregisterBoxWithWrongIdTest(){
+        when(collectionBoxRepository.findById(any())).thenReturn(Optional.empty());
+        assertThrows(CollectionBoxNotFoundException.class, () -> collectionBoxService.unregisterBox(2L));
+        verify(collectionBoxRepository,times(0)).delete(any());
+    }
+
+    @Test
+    public void unregisterBoxWithGoodIdTest(){
+        when(collectionBoxRepository.findById(any())).thenReturn(Optional.of(new CollectionBoxEntity(2L, null, null)));
+        collectionBoxService.unregisterBox(2L);
+        verify(collectionBoxRepository,times(1)).delete(any());
+    }
 
     // prcise number
 }

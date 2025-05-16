@@ -26,7 +26,7 @@ public class CollectionBoxService {
         if(!exchangeRateService.isCurrencyNoted(currency))
             throw  new IllegalCurrencyException(currency);
 
-        CollectionBoxEntity collectionBox = collectionBoxRepository.findById(id).orElseThrow(()->new CollectionBoxNotFoundException(id.toString()));
+        CollectionBoxEntity collectionBox = collectionBoxRepository.findByIdAndFetchCurrencies(id).orElseThrow(()->new CollectionBoxNotFoundException(id.toString()));
 
         BigDecimal currCash = collectionBox.getCurrencies().get(currency);
         if (currCash == null) {
@@ -36,6 +36,12 @@ public class CollectionBoxService {
         }
 
         collectionBoxRepository.save(collectionBox);
+
+    }
+
+    public void unregisterBox(Long id) {
+        CollectionBoxEntity collectionBox = collectionBoxRepository.findById(id).orElseThrow(()->new CollectionBoxNotFoundException(id.toString()));
+        collectionBoxRepository.delete(collectionBox);
 
     }
 }
