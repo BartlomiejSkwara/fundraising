@@ -1,6 +1,8 @@
 package org.example.fundraising.common;
 
+import org.example.fundraising.common.exceptions.CollectionBoxNotFoundException;
 import org.example.fundraising.common.exceptions.IllegalCurrencyException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.FieldError;
@@ -30,5 +32,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
 
+    @ExceptionHandler(CollectionBoxNotFoundException.class)
+    public ResponseEntity<String> handleCollectionBoxNotFoundException(CollectionBoxNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
 
 }

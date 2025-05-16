@@ -14,6 +14,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -47,67 +50,32 @@ class EventControllerTest {
 
     }
     @Test()
-    void eventNameValidationFailTest() throws Exception {
-        CreateEventRequest request = new CreateEventRequest("", "EUR");
-        mockMvc.perform(post("/api/event")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
+    void eventNameValidationTest() throws Exception {
+        List<String> invalidCodesNames  = Arrays.asList("",null," ".repeat(100),"0".repeat(256));
+        CreateEventRequest request;
+        for(String str:invalidCodesNames){
+            request = new CreateEventRequest(str, "EUR");
+            mockMvc.perform(post("/api/event")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isBadRequest());
+        }
 
-        request = new CreateEventRequest("".repeat(100), "EUR");
-        mockMvc.perform(post("/api/event")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
-
-        request = new CreateEventRequest(null, "EUR");
-        mockMvc.perform(post("/api/event")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
-
-        request = new CreateEventRequest("0".repeat(256), "EUR");
-        mockMvc.perform(post("/api/event")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
-
-        verify(eventService, times(0)).createEvent(request);
+        verify(eventService, times(0)).createEvent(any());
     }
 
     @Test()
-    void currencyCodeValidationFailTest() throws Exception {
-        CreateEventRequest request = new CreateEventRequest("Test Event", "");
-        mockMvc.perform(post("/api/event")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
-
-        request = new CreateEventRequest("Test Event", null);
-        mockMvc.perform(post("/api/event")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
-
-        request = new CreateEventRequest("Test Event", "pln");
-        mockMvc.perform(post("/api/event")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
-
-        request = new CreateEventRequest("Test Event", "PL");
-        mockMvc.perform(post("/api/event")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
-
-        request = new CreateEventRequest("Test Event", "123");
-        mockMvc.perform(post("/api/event")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
-
-        verify(eventService, times(0)).createEvent(request);
+    void currencyCodeValidationTest() throws Exception {
+        List<String> invalidCodes  = Arrays.asList("",null,"pln","PL","123","PLNN");
+        CreateEventRequest request;
+        for (String str : invalidCodes) {
+            request = new  CreateEventRequest("Test Event", str);
+            mockMvc.perform(post("/api/event")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isBadRequest());
+        }
+        verify(eventService, times(0)).createEvent(any());
 
     }
 

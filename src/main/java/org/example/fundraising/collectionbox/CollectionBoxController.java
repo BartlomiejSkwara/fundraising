@@ -1,9 +1,16 @@
 package org.example.fundraising.collectionbox;
 
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
+import org.example.fundraising.collectionbox.dto.AddCashToBoxRequest;
 import org.example.fundraising.collectionbox.dto.ListCollectionBoxResponse;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/api/collectionBox")
@@ -36,11 +43,12 @@ public class CollectionBoxController {
     }
 
     @PatchMapping("/{id}/addCash")
-    public void addCashToBox(
+    public ResponseEntity<Void> addCashToBox(
             @PathVariable Long id,
-            @RequestParam Double cash
+            @RequestBody @Valid AddCashToBoxRequest addCashToBoxRequest
     ) {
-
+        collectionBoxService.addCash(id,addCashToBoxRequest.currencyCode(),new BigDecimal(addCashToBoxRequest.cashAmount()));
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{id}/emptyBox")

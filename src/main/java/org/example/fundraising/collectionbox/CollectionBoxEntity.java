@@ -1,9 +1,7 @@
 package org.example.fundraising.collectionbox;
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.example.fundraising.event.EventEntity;
 
 import java.math.BigDecimal;
@@ -14,6 +12,9 @@ import java.util.Map;
 @Getter
 @Setter
 @EqualsAndHashCode
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CollectionBoxEntity {
 
     @Id
