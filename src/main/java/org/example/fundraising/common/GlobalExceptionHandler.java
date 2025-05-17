@@ -1,9 +1,6 @@
 package org.example.fundraising.common;
 
-import org.example.fundraising.common.exceptions.CollectionBoxNotFoundException;
-import org.example.fundraising.common.exceptions.EventAssignmentToBoxWithBalance;
-import org.example.fundraising.common.exceptions.EventNotFoundException;
-import org.example.fundraising.common.exceptions.IllegalCurrencyException;
+import org.example.fundraising.common.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -44,5 +41,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleEventAssignmentToBoxWithBalance(EventAssignmentToBoxWithBalance ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
+
+    @ExceptionHandler(EmptyingUnassignedBoxException.class)
+    public ResponseEntity<String> handleEmptyingUnassignedBoxException(EmptyingUnassignedBoxException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
+
+
 
 }

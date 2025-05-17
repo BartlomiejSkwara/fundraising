@@ -52,13 +52,12 @@ public class CollectionBoxController {
             @RequestBody @Valid AddCashToBoxRequest addCashToBoxRequest
     ) {
         collectionBoxService.addCash(id,addCashToBoxRequest.currencyCode(),new BigDecimal(addCashToBoxRequest.cashAmount()));
-        System.out.println("cash added");
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{id}/emptyBox")
     public void emptyBox(@PathVariable Long id) {
-
+        collectionBoxService.emptyBox(id);
     }
 
 

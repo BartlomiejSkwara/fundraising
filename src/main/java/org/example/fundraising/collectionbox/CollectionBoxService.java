@@ -3,10 +3,7 @@ package org.example.fundraising.collectionbox;
 
 import lombok.RequiredArgsConstructor;
 import org.example.fundraising.common.ExchangeRateService;
-import org.example.fundraising.common.exceptions.CollectionBoxNotFoundException;
-import org.example.fundraising.common.exceptions.EventAssignmentToBoxWithBalance;
-import org.example.fundraising.common.exceptions.EventNotFoundException;
-import org.example.fundraising.common.exceptions.IllegalCurrencyException;
+import org.example.fundraising.common.exceptions.*;
 import org.example.fundraising.event.EventEntity;
 import org.example.fundraising.event.EventRepository;
 import org.springframework.stereotype.Service;
@@ -66,5 +63,24 @@ public class CollectionBoxService {
         collectionBoxRepository.save(collectionBox);
 
 
+    }
+
+    public void emptyBox(Long boxId) {
+        CollectionBoxEntity collectionBox = collectionBoxRepository.findByIdAndFetchCurrencies(boxId).orElseThrow(()->new CollectionBoxNotFoundException(boxId.toString()));
+        EventEntity ev = collectionBox.getEvent();
+        if (ev == null) {
+            throw new EmptyingUnassignedBoxException(boxId.toString());
+        }
+
+        BigDecimal sum = new BigDecimal("0");
+        for(var value : collectionBox.getCurrencies().entrySet()){
+            sum = sum.add(exchangeRateService.exchangeCurrency(value.getKey(),value.getValue(),ev.getCurrency()));
+        }
+
+        ev.setBalance(ev.getBalance().add(sum));
+        collectionBox.setCurrencies(new HashMap<>());
+
+        collectionBoxRepository.save(collectionBox);
+        eventRepository.save(ev);
     }
 }
