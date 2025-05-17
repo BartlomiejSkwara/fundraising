@@ -38,11 +38,12 @@ public class CollectionBoxController {
     }
 
     @PatchMapping("/{boxId}/event/{eventId}")
-    public void assignBox(
+    public ResponseEntity<Void> assignEvent(
             @PathVariable Long boxId,
             @PathVariable Long eventId
     ) {
-
+        collectionBoxService.assignEvent(boxId,eventId);
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{id}/addCash")

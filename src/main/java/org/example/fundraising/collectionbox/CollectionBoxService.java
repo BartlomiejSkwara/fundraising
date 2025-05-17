@@ -1,22 +1,27 @@
 package org.example.fundraising.collectionbox;
 
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.fundraising.collectionbox.dto.AddCashToBoxRequest;
 import org.example.fundraising.common.ExchangeRateService;
 import org.example.fundraising.common.exceptions.CollectionBoxNotFoundException;
+import org.example.fundraising.common.exceptions.EventAssignmentToBoxWithBalance;
+import org.example.fundraising.common.exceptions.EventNotFoundException;
 import org.example.fundraising.common.exceptions.IllegalCurrencyException;
+import org.example.fundraising.event.EventEntity;
+import org.example.fundraising.event.EventRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Optional;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class CollectionBoxService {
     private final CollectionBoxRepository collectionBoxRepository;
     private final ExchangeRateService exchangeRateService;
+    private final EventRepository eventRepository;
+
     public void registerCollectionBox() {
         collectionBoxRepository.save(new CollectionBoxEntity());
     }
@@ -42,6 +47,24 @@ public class CollectionBoxService {
     public void unregisterBox(Long id) {
         CollectionBoxEntity collectionBox = collectionBoxRepository.findById(id).orElseThrow(()->new CollectionBoxNotFoundException(id.toString()));
         collectionBoxRepository.delete(collectionBox);
+
+    }
+
+    public void assignEvent(Long boxId, Long eventId) {
+        CollectionBoxEntity collectionBox = collectionBoxRepository.findByIdAndFetchCurrencies(boxId).orElseThrow(()->new CollectionBoxNotFoundException(boxId.toString()));
+        Map<String,BigDecimal> currencies = collectionBox.getCurrencies();
+        if(currencies != null && !currencies.isEmpty()){
+            for(BigDecimal value : currencies.values()){
+                if(value.compareTo(BigDecimal.ZERO)!=0){
+                    throw new EventAssignmentToBoxWithBalance(boxId.toString());
+                }
+            }
+        }
+
+        EventEntity ev  = eventRepository.findById(eventId).orElseThrow(()->new EventNotFoundException(eventId.toString()));
+        collectionBox.setEvent(ev);
+        collectionBoxRepository.save(collectionBox);
+
 
     }
 }

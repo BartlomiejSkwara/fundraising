@@ -3,8 +3,6 @@ package org.example.fundraising.collectionbox;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.fundraising.collectionbox.dto.AddCashToBoxRequest;
 import org.example.fundraising.common.exceptions.IllegalCurrencyException;
-import org.example.fundraising.event.EventController;
-import org.example.fundraising.event.EventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -15,7 +13,6 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,7 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(CollectionBoxController.class)
-public class CollectionBoxControllerTest {
+public class CollectionBoxControllerTests {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -114,9 +111,9 @@ public class CollectionBoxControllerTest {
     void unregisterBoxWrongIdTest() throws Exception {
         List<String> invalidCashAmount = Arrays.asList("abc","1.3");
         for (String str : invalidCashAmount) {
-            String url  =  String.format("/api/collectionBox/%s/addCash",str);
+            String url  =  String.format("/api/collectionBox/%s",str);
             mockMvc.perform(delete(url)
-            ).andExpect(status().isOk());
+            ).andExpect(status().isBadRequest());
         }
         verify(collectionBoxService,times(0)).unregisterBox(any());
     }

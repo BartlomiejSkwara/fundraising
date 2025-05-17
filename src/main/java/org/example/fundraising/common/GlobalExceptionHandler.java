@@ -1,19 +1,17 @@
 package org.example.fundraising.common;
 
 import org.example.fundraising.common.exceptions.CollectionBoxNotFoundException;
+import org.example.fundraising.common.exceptions.EventAssignmentToBoxWithBalance;
+import org.example.fundraising.common.exceptions.EventNotFoundException;
 import org.example.fundraising.common.exceptions.IllegalCurrencyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -35,6 +33,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CollectionBoxNotFoundException.class)
     public ResponseEntity<String> handleCollectionBoxNotFoundException(CollectionBoxNotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(EventNotFoundException.class)
+    public ResponseEntity<String> handleEventNotFoundException(EventNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(EventAssignmentToBoxWithBalance.class)
+    public ResponseEntity<String> handleEventAssignmentToBoxWithBalance(EventAssignmentToBoxWithBalance ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
 
 }
