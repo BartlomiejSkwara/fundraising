@@ -45,7 +45,7 @@ class EventControllerTest {
         mockMvc.perform(post("/api/event")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
         verify(eventService, times(1)).createEvent(request);
 
     }

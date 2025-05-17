@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -22,8 +21,8 @@ public class CollectionBoxService {
     private final ExchangeRateService exchangeRateService;
     private final EventRepository eventRepository;
 
-    public void registerCollectionBox() {
-        collectionBoxRepository.save(new CollectionBoxEntity());
+    public CollectionBoxEntity registerCollectionBox() {
+        return collectionBoxRepository.save(new CollectionBoxEntity());
     }
 
     public void addCash(Long id, String currency, BigDecimal cash) {

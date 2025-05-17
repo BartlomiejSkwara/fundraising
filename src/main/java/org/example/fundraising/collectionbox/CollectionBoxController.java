@@ -12,21 +12,23 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.net.URI;
 import java.util.List;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/api/collectionBox")
+@RequestMapping("/api/collectionBoxes")
 @RequiredArgsConstructor
 public class CollectionBoxController {
 
     private final CollectionBoxService collectionBoxService;
 
     @PostMapping()
-    public ResponseEntity<Void> registerNewBox() {
-        collectionBoxService.registerCollectionBox();
-        System.out.println("Registered new collection box");
-        return ResponseEntity.ok().build();
+    public ResponseEntity<CollectionBoxEntity> registerNewBox() {
+        CollectionBoxEntity cb = collectionBoxService.registerCollectionBox();
+        return ResponseEntity
+                .created(URI.create("/api/collectionBoxes/" + cb.getId()))
+                .body(cb);
     }
 
     @GetMapping("/listAll")

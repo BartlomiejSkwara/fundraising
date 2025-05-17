@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.example.fundraising.common.ExchangeRateService;
 import org.example.fundraising.common.exceptions.IllegalCurrencyException;
 import org.example.fundraising.event.dto.CreateEventRequest;
+import org.example.fundraising.event.dto.EventReportProjection;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -14,7 +16,7 @@ public class EventService {
 
     private final ExchangeRateService exchangeRateService;
     private final EventRepository eventRepository;
-    public void createEvent(CreateEventRequest request) {
+    public EventEntity createEvent(CreateEventRequest request) {
         if(!exchangeRateService.isCurrencyNoted(request.currencyCode())){
             throw new IllegalCurrencyException(request.currencyCode());
         }
@@ -24,6 +26,10 @@ public class EventService {
                 .name(request.eventName())
                 .currency(request.currencyCode())
                 .build();
-        eventRepository.save(event);
+        return eventRepository.save(event);
+    }
+
+    public Set<EventReportProjection> getFinancialReport() {
+        return eventRepository.getFinancialReport();
     }
 }

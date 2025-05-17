@@ -41,7 +41,7 @@ public class EventIntegrationTests {
         mockMvc.perform(post("/api/event")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
         assert (eventRepo.count() == 1);
         EventEntity eventEntity  = eventRepo.findById(1L).get();
         EventEntity predicted = EventEntity.builder()

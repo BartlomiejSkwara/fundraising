@@ -37,14 +37,14 @@ public class CollectionBoxControllerTests {
 
     @Test
     void registerBoxTest() throws Exception {
-        mockMvc.perform(post("/api/collectionBox"))
-                .andExpect(status().isOk());
+        mockMvc.perform(post("/api/collectionBoxes"))
+                .andExpect(status().isCreated());
         verify(collectionBoxService,times(1)).registerCollectionBox();
     }
     @Test
     void addCashCorrectDataTest() throws Exception {
         AddCashToBoxRequest request = new AddCashToBoxRequest("PLN","10.00");
-        mockMvc.perform(patch("/api/collectionBox/1/addCash")
+        mockMvc.perform(patch("/api/collectionBoxes/1/addCash")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
         ).andExpect(status().isOk());
@@ -57,7 +57,7 @@ public class CollectionBoxControllerTests {
         AddCashToBoxRequest request;
         for (String str : invalidCodes) {
             request = new AddCashToBoxRequest(str,"10.00");
-            mockMvc.perform(patch("/api/collectionBox/1/addCash")
+            mockMvc.perform(patch("/api/collectionBoxes/1/addCash")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
             ).andExpect(status().isBadRequest());
@@ -71,7 +71,7 @@ public class CollectionBoxControllerTests {
         AddCashToBoxRequest request;
         for (String str : invalidCashAmount) {
             request = new AddCashToBoxRequest("PLN",str);
-            mockMvc.perform(patch("/api/collectionBox/1/addCash")
+            mockMvc.perform(patch("/api/collectionBoxes/1/addCash")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
             ).andExpect(status().isBadRequest());
@@ -85,7 +85,7 @@ public class CollectionBoxControllerTests {
         List<String> invalidCashAmount = Arrays.asList("abc","1.3");
         AddCashToBoxRequest request = new AddCashToBoxRequest("PLN","10.00");
         for (String str : invalidCashAmount) {
-            String url  =  String.format("/api/collectionBox/%s/addCash",str);
+            String url  =  String.format("/api/collectionBoxes/%s/addCash",str);
             mockMvc.perform(patch(url)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
@@ -100,7 +100,7 @@ public class CollectionBoxControllerTests {
         AddCashToBoxRequest request = new AddCashToBoxRequest("JPN","10.00");
 
         doThrow(IllegalCurrencyException.class).when(collectionBoxService).addCash(any(),any(),any());
-        mockMvc.perform(patch("/api/collectionBox/1/addCash")
+        mockMvc.perform(patch("/api/collectionBoxes/1/addCash")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
         ).andExpect(status().isBadRequest());
@@ -111,7 +111,7 @@ public class CollectionBoxControllerTests {
     void unregisterBoxWrongIdTest() throws Exception {
         List<String> invalidCashAmount = Arrays.asList("abc","1.3");
         for (String str : invalidCashAmount) {
-            String url  =  String.format("/api/collectionBox/%s",str);
+            String url  =  String.format("/api/collectionBoxes/%s",str);
             mockMvc.perform(delete(url)
             ).andExpect(status().isBadRequest());
         }
