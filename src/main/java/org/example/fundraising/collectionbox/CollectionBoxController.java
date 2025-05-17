@@ -5,12 +5,15 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.example.fundraising.collectionbox.dto.AddCashToBoxRequest;
+import org.example.fundraising.collectionbox.dto.CollectionBoxProjection;
 import org.example.fundraising.collectionbox.dto.ListCollectionBoxResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/collectionBox")
@@ -27,8 +30,8 @@ public class CollectionBoxController {
     }
 
     @GetMapping("/listAll")
-    public ListCollectionBoxResponse listBoxes() {
-        return null;
+    public ResponseEntity<Set<CollectionBoxProjection>> listBoxes() {
+        return ResponseEntity.ok(collectionBoxService.listBoxes());
     }
 
     @DeleteMapping("/{id}")

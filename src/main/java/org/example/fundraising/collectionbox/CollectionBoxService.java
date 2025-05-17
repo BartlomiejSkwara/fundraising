@@ -2,6 +2,7 @@ package org.example.fundraising.collectionbox;
 
 
 import lombok.RequiredArgsConstructor;
+import org.example.fundraising.collectionbox.dto.CollectionBoxProjection;
 import org.example.fundraising.common.ExchangeRateService;
 import org.example.fundraising.common.exceptions.*;
 import org.example.fundraising.event.EventEntity;
@@ -10,7 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -82,5 +85,9 @@ public class CollectionBoxService {
 
         collectionBoxRepository.save(collectionBox);
         eventRepository.save(ev);
+    }
+
+    public Set<CollectionBoxProjection> listBoxes() {
+        return collectionBoxRepository.listBoxProjections();
     }
 }

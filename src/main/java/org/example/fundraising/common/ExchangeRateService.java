@@ -31,7 +31,7 @@ public class ExchangeRateService {
             throw new IllegalCurrencyException(toCurrency);
         }
 
-        BigDecimal rate = from.divide(to);
+        BigDecimal rate = from.divide(to,5,RoundingMode.HALF_UP);
         return currencyAmount.multiply(rate);
     }
 
