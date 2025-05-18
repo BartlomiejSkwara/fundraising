@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.fundraising.collectionbox.dto.AddCashToBoxRequest;
 import org.example.fundraising.collectionbox.dto.CollectionBoxProjection;
 import org.example.fundraising.collectionbox.dto.ListCollectionBoxResponse;
+import org.example.fundraising.common.exceptions.CashAmountException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -56,7 +57,11 @@ public class CollectionBoxController {
             @PathVariable Long id,
             @RequestBody @Valid AddCashToBoxRequest addCashToBoxRequest
     ) {
-        collectionBoxService.addCash(id,addCashToBoxRequest.currencyCode(),new BigDecimal(addCashToBoxRequest.cashAmount()));
+        BigDecimal cash = new BigDecimal(addCashToBoxRequest.cashAmount());
+        if(cash.compareTo(BigDecimal.ZERO) < 1) {
+            throw new CashAmountException(cash.toString());
+        }
+        collectionBoxService.addCash(id,addCashToBoxRequest.currencyCode(),cash);
         return ResponseEntity.ok().build();
     }
 

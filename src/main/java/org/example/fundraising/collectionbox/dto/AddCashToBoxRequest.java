@@ -13,8 +13,8 @@ public record AddCashToBoxRequest (
         )
         String currencyCode,
         @Pattern(
-                regexp = "^\\d{1,11}.\\d{2}$",
-                message = "'cashAmount' - must be formated in following format 5.00")
+                regexp = "^\\d{1,7}.\\d{2}$",
+                message = "'cashAmount' - must be a number starting with 1 to 7 digits, followed by a period, and ending with exactly 2 digits (example 5.00)")
         @NotNull
         String cashAmount
 ){

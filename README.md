@@ -1,15 +1,16 @@
 # Instructions
 ## Project Setup
-Before following following steps please make sure that your java version is equal or greater then 21.
-To setup a project you must perform following steps.
-1. Clone the repository using
-   git clone https://github.com/pppp.git
-2. Build maven project todo
-3. Run the project todo
+Before proceeding with following steps, please ensure sure that your java version is equal to or greater then 21.
+To set up a project, you must perform the steps below.
+1. Clone the repository 
+```
+git clone https://github.com/BartlomiejSkwara/fundraising
+```
+2. Run maven project
+```
+mvnw clean spring-boot:run
+```
 
-todo what if port is already used
-
-****
 ## REST API Endpoints
 Whole app encompasses 8 endpoints that allow manipulating data of fundraising events.
 Each endpoint after successfully setting up project should begin with http://localhost:8080/api.
@@ -29,9 +30,15 @@ If the port ... it may wary
 | PATCH  | /collectionBoxes/{id}/emptyBox        | Removes all funds allocated in box and transfers them to assigned event |
 ****
 ### Detailed descriptions
-You can access the examples of requests to all of the endpoints in following postman workspace:
+You can access the example requests to all the endpoints in following postman workspace:
+
 https://www.postman.com/restless-crescent-793224/fundraising/overview
-If you don't want to use it each description contains example curl command for cmd. 
+
+If you don't want to use it each following detailed description contains example curl command for cmd.
+
+#### Warning !!!
+
+Example curl commands were tested on Windows 11 cmd. They  may not work on powershell, bash or other different command line interfaces due to differences in syntax.  
 #### 1. Event registration (POST) /api/event
 Endpoint is capable of registering event with user specified name and currency code.
 All of the following parameters are mandatory and must be passed in request body in JSON format.
@@ -115,11 +122,11 @@ curl -L -X PATCH "http://localhost:8080/api/collectionBoxes/1/event/1"
 ####  7. Cash addition (PATCH) /api/collectionBoxes/{id}/addCash
 Endpoint is capable of increasing balance of collection box event with user specified name and currency code. Each currencies typ balance is counted separately.
 All of the following parameters are mandatory and must be passed in request body in JSON format.
-- cashAmount (text representation of a number starting with 1 to 11 digits, followed by a period, and ending with exactly 2 digits)
+- cashAmount (text representation of a number starting with 1 to 7 digits, followed by a period, and ending with exactly 2 digits)
 - currencyCode (must follow ISO 4217 format)
 
 ##### Example curl
-```shell
+```cmd
 curl -L -X PATCH "http://localhost:8080/api/collectionBoxes/1/addCash" -H "Content-Type: application/json" -d "{ \"currencyCode\": \"PLN\", \"cashAmount\": \"01.00\" }"
 ```
 ##### TODO (think about adding response) Example response after successful operation

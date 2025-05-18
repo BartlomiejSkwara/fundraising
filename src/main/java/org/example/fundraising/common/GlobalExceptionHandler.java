@@ -48,5 +48,11 @@ public class GlobalExceptionHandler {
     }
 
 
+    @ExceptionHandler(CashAmountException.class)
+    public ResponseEntity<String> handleCashAmountException(CashAmountException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+
 
 }
