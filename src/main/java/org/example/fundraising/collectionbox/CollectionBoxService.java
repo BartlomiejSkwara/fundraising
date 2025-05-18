@@ -1,6 +1,7 @@
 package org.example.fundraising.collectionbox;
 
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.fundraising.collectionbox.dto.CollectionBoxProjection;
 import org.example.fundraising.common.ExchangeRateService;
@@ -67,6 +68,7 @@ public class CollectionBoxService {
 
     }
 
+    @Transactional
     public void emptyBox(Long boxId) {
         CollectionBoxEntity collectionBox = collectionBoxRepository.findByIdAndFetchCurrencies(boxId).orElseThrow(()->new CollectionBoxNotFoundException(boxId.toString()));
         EventEntity ev = collectionBox.getEvent();

@@ -1,20 +1,54 @@
 # Instructions
 ## Project Setup
-Before proceeding with following steps, please ensure sure that your java version is equal to or greater then 21.
-To set up a project, you must perform the steps below.
+Before proceeding with following steps, please ensure that your java version is equal to or greater then 21.
+You can verify it with ```java --version```. To set up a project, you must perform the steps below.
+
+### Running project
+### 
+
+
 1. Clone the repository 
 ```
 git clone https://github.com/BartlomiejSkwara/fundraising
 ```
-2. Run maven project
+2. Enter repos directory
+```
+cd fundraising
+```
+3. Run maven project using maven wrapper
 ```
 mvnw clean spring-boot:run
 ```
 
+### Optional (building jar):
+If you want to create a jar file for later deployment first follow steps 1 and 2 for running project (cloning repo and entering directory).
+```
+mvnw clean package
+```
+Jar file can be ran using following command
+```
+java -jar target\fundraising-0.1.0.jar
+```
+
+### Issues with used port
+Application runs by default on port 8080 so if the running process fails make sure that it is not in use. You can change the used port in following ways:
+
+For spring:boot run:
+```
+mvnw spring-boot:run -Dspring-boot.run.arguments=--server.port=8081
+```
+
+For jar file:
+```
+java -jar target/fundraising-0.1.0.jar --server.port=8081
+```
+## Currencies
+todo write about used api etc
+
 ## REST API Endpoints
 Whole app encompasses 8 endpoints that allow manipulating data of fundraising events.
 Each endpoint after successfully setting up project should begin with http://localhost:8080/api.
-If the port ... it may wary
+
 
 ### List of all endpoints 
 
@@ -38,12 +72,13 @@ If you don't want to use it each following detailed description contains example
 
 #### Warning !!!
 
-Example curl commands were tested on Windows 11 cmd. They  may not work on powershell, bash or other different command line interfaces due to differences in syntax.  
+Example curl commands were tested on Windows 11 cmd. They  may not work on powershell, bash or other command line interfaces due to differences in syntax.  
+****
 #### 1. Event registration (POST) /api/event
 Endpoint is capable of registering event with user specified name and currency code.
 All of the following parameters are mandatory and must be passed in request body in JSON format.
 - eventName (can't be blank, can't exceed 255 characters)
-- currencyCode (must follow ISO 4217 format)
+- currencyCode (must follow ISO 4217 format, for now  supported currencies are limited to PLN, EUR and USD)
 ##### Example curl
 ```cmd
 curl -L "http://localhost:8080/api/event" -H "Content-Type: application/json" -d "{\"eventName\": \"New Event\" , \"currencyCode\": \"EUR\"  }", 
@@ -112,28 +147,21 @@ All of the path parameters are mandatory .
 ```cmd
 curl -L -X PATCH "http://localhost:8080/api/collectionBoxes/1/event/1"
 ```
-##### TODO (think about adding response) Example response after successful operation
-```json
-```
+
+
+
 ****
-
-
-
 ####  7. Cash addition (PATCH) /api/collectionBoxes/{id}/addCash
 Endpoint is capable of increasing balance of collection box event with user specified name and currency code. Each currencies typ balance is counted separately.
 All of the following parameters are mandatory and must be passed in request body in JSON format.
 - cashAmount (text representation of a number starting with 1 to 7 digits, followed by a period, and ending with exactly 2 digits)
-- currencyCode (must follow ISO 4217 format)
+- currencyCode (must follow ISO 4217 format, for now supported currencies are limited to PLN, EUR and USD)
 
 ##### Example curl
 ```cmd
 curl -L -X PATCH "http://localhost:8080/api/collectionBoxes/1/addCash" -H "Content-Type: application/json" -d "{ \"currencyCode\": \"PLN\", \"cashAmount\": \"01.00\" }"
 ```
-##### TODO (think about adding response) Example response after successful operation
-```json
-```
 ****
-
 
 #### 8. Box emptying (PATCH) /api/collectionBoxes/{id}/emptyBox
 Endpoint exchanges the money stored in collection box to the currency specified in the assigned event, after it the money is transferred to the assigned events balance.
@@ -142,10 +170,6 @@ All of the path parameters are mandatory .
 ##### Example curl (cmd)
 ```cmd
 curl -L -X PATCH "http://localhost:8080/api/collectionBoxes/1/emptyBox"
-```
-##### TODO (think about adding response) Example response after successful operation
-```json
-{"id":1,"currency":"EUR","balance":0.0,"name":"New Event"}
 ```
 
 ****
