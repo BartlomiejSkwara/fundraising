@@ -37,10 +37,13 @@ public class CollectionBoxControllerTests {
 
     @Test
     void registerBoxTest() throws Exception {
+        when(collectionBoxService.registerCollectionBox()).thenReturn(CollectionBoxEntity.builder().id(1L).build());
         mockMvc.perform(post("/api/collectionBoxes"))
                 .andExpect(status().isCreated());
         verify(collectionBoxService,times(1)).registerCollectionBox();
     }
+
+
     @Test
     void addCashCorrectDataTest() throws Exception {
         AddCashToBoxRequest request = new AddCashToBoxRequest("PLN","10.00");

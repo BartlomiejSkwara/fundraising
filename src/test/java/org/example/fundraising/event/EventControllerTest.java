@@ -41,7 +41,7 @@ class EventControllerTest {
     @Test
     void successfulEventCreationTest() throws Exception {
         CreateEventRequest request = new CreateEventRequest("Test Event", "EUR");
-
+        when(eventService.createEvent(request)).thenReturn(EventEntity.builder().id(1L).name(request.eventName()).build());
         mockMvc.perform(post("/api/event")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request)))

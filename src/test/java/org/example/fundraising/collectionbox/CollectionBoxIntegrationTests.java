@@ -11,8 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -30,6 +34,7 @@ public class CollectionBoxIntegrationTests {
     @Autowired
     private ObjectMapper objectMapper;
 
+
     @BeforeEach
     public void setup() {
         eventRepo.deleteAll();
@@ -38,14 +43,16 @@ public class CollectionBoxIntegrationTests {
 
     @Test
     @Transactional
+    @DirtiesContext
     public void testBoxCreation() throws Exception {
-        quickCollectionBoxRegistrationRequest().andExpect(status().isOk());
+        quickCollectionBoxRegistrationRequest().andExpect(status().isCreated());
         assert (cbRepo.count() == 1);
         CollectionBoxEntity cb = cbRepo.findById(1L).get();
         assert (cb.getEvent() == null);
         assert (cb.getCurrencies() == null);
     }
     @Test
+    @DirtiesContext
     public void testEventAssignment() throws Exception {
         quickEventCreationRequest("Event 1","PLN");
         quickCollectionBoxRegistrationRequest();
@@ -61,11 +68,11 @@ public class CollectionBoxIntegrationTests {
 
 
     ResultActions quickEventAssignment(Long boxId, Long eventId) throws Exception {
-        return mockMvc.perform(patch(String.format("/api/%s/event/%s", boxId.toString(), eventId.toString()))
+        return mockMvc.perform(patch(String.format("/api/collectionBoxes/%s/event/%s", boxId.toString(), eventId.toString()))
         );
     }
     ResultActions quickCollectionBoxRegistrationRequest() throws Exception {
-        return mockMvc.perform(post("/api/collectionBox"));
+        return mockMvc.perform(post("/api/collectionBoxes"));
     }
     ResultActions quickEventCreationRequest(String name, String currencyCode) throws Exception {
         return mockMvc.perform(post("/api/event")
