@@ -1,7 +1,11 @@
 # Instructions
 ## Project Setup
-Before proceeding with following steps, please ensure that your java version is equal to or greater then 21.
+Before proceeding with following steps, please ensure that your java version is equal to or greater than 21.
 You can verify it with ```java --version```. To set up a project, you must perform the steps below.
+
+
+#### Warning !!!
+Project setup commands were tested on Windows 11 cmd. Other command line interfaces like  powershell, bash etc. may have a slightly different syntax.
 
 ### Running project
 ### 
@@ -21,17 +25,18 @@ mvnw clean spring-boot:run
 ```
 
 ### Optional (building jar):
-If you want to create a jar file for later deployment first follow steps 1 and 2 for running project (cloning repo and entering directory).
+If you want to create a jar file for later deployment first follow steps 1 and 2 of running project section (cloning repo and entering directory).
 ```
 mvnw clean package
 ```
-Jar file can be ran using following command
+Jar file can be run using following command
 ```
 java -jar target\fundraising-0.1.0.jar
 ```
 
 ### Issues with used port
-Application runs by default on port 8080 so if the running process fails make sure that it is not in use. You can change the used port in following ways:
+By default, application runs  on port 8080 so if the running process fails make sure that it is not in use. 
+If You want to it is possible to change the used port in following ways:
 
 For spring:boot run:
 ```
@@ -43,11 +48,27 @@ For jar file:
 java -jar target/fundraising-0.1.0.jar --server.port=8081
 ```
 ## Currencies
-todo write about used api etc
+Usable currencies are limited to following subset: PLN, EUR, USD. Exchange rate is based on the value of PLN.
+
+During startup app will try to fetch current exchange rates from free open-source Frankfurter api.
+
+https://frankfurter.dev/
+
+If the app encounters issues during fetching it will use default hardcoded exchange rate values. 
+```
+PLN (1.0)
+EUR (0.23474)
+USD (0.26277)
+```
+ 
+
+
+
 
 ## REST API Endpoints
-Whole app encompasses 8 endpoints that allow manipulating data of fundraising events.
-Each endpoint after successfully setting up project should begin with http://localhost:8080/api.
+App consists of 8 endpoints that allow manipulation of fundraising events data.
+
+Each endpoint begins with http://localhost:8080/api, unless the user changed the port, in which case replace "8080" with user specified port.
 
 
 ### List of all endpoints 
@@ -64,21 +85,20 @@ Each endpoint after successfully setting up project should begin with http://loc
 | PATCH  | /collectionBoxes/{id}/emptyBox        | Removes all funds allocated in box and transfers them to assigned event |
 ****
 ### Detailed descriptions
-You can access the example requests to all the endpoints in following postman workspace:
+You can access the example requests through the following postman workspace:
 
 https://www.postman.com/restless-crescent-793224/fundraising/overview
 
-If you don't want to use it each following detailed description contains example curl command for cmd.
+If you prefer not to use postman the following text contains detailed description of the endpoints and example curl commands for cmd.
 
 #### Warning !!!
-
 Example curl commands were tested on Windows 11 cmd. They  may not work on powershell, bash or other command line interfaces due to differences in syntax.  
 ****
-#### 1. Event registration (POST) /api/event
+#### 1. Event registration (POST) /event
 Endpoint is capable of registering event with user specified name and currency code.
-All of the following parameters are mandatory and must be passed in request body in JSON format.
+All the following parameters are mandatory and must be passed through request body in JSON format.
 - eventName (can't be blank, can't exceed 255 characters)
-- currencyCode (must follow ISO 4217 format, for now  supported currencies are limited to PLN, EUR and USD)
+- currencyCode (must follow ISO 4217 format, right now currencies are limited to PLN, EUR and USD)
 ##### Example curl
 ```cmd
 curl -L "http://localhost:8080/api/event" -H "Content-Type: application/json" -d "{\"eventName\": \"New Event\" , \"currencyCode\": \"EUR\"  }", 
@@ -89,7 +109,7 @@ curl -L "http://localhost:8080/api/event" -H "Content-Type: application/json" -d
 ```
 ****
 
-#### 2. Financial report (GET) /api/event/financialReport
+#### 2. Financial report (GET) /event/financialReport
 Endpoint is capable of retrieving financial report for fundraising events.
 ##### Example curl
 ```cmd
@@ -101,7 +121,7 @@ curl -L "http://localhost:8080/api/event/financialReport"
 ```
 ****
 
-#### 3. Collection box registration (POST) /api/collectionBoxes
+#### 3. Collection box registration (POST) /collectionBoxes
 Endpoint is capable of registering new blank collection boxes.
 
 ##### Example curl
@@ -113,7 +133,7 @@ curl -L -X POST "http://localhost:8080/api/collectionBoxes"
  {"id":2,"event":null,"currencies":null}
 ```
 ****
-####  4. List collection boxes (POST) /api/collectionBoxes/listAll
+####  4. List collection boxes (POST) /collectionBoxes/listAll
 Endpoint is capable of listing out all collection boxes and giving information about their assignment state and if they are empty.
 ##### Example curl
 ```cmd
@@ -124,9 +144,9 @@ curl -L "http://localhost:8080/api/collectionBoxes/listAll"
 [{"empty":true,"id":2,"assignedToEvent":false},{"empty":true,"id":3,"assignedToEvent":false},{"empty":false,"id":1,"assignedToEvent":true}]
 ```
 ****
-#### 5. Unregister collection box (DELETE) /api/collectionBoxes/{id}
-Endpoint is capable of registering event, which basically leads to losing whole data about its balance . Use in case of destruction/loss of the collection box.
-All of the path parameters are mandatory .
+#### 5. Unregister collection box (DELETE) /collectionBoxes/{id}
+Endpoint is capable of unregistering event, which basically leads to removing it while losing data about its balance . Use in case of destruction/loss of the collection box.
+All the path parameters are mandatory .
 - {id} (id of the assigned collection box, natural number)
 ##### Example curl
 ```cmd
@@ -139,7 +159,7 @@ curl -L -X DELETE "http://localhost:8080/api/collectionBoxes/1"
 
 ####  6. Event assignment (PATCH) /collectionBoxes/{id}/event/{eventId}
 Endpoint is capable of assigning collection boxes to events.
-All of the path parameters are mandatory .
+All the path parameters are mandatory .
 - {id}  (id of the assigned collection box, natural number)  
 - {eventId} (id of the event, natural number)
   
@@ -151,11 +171,11 @@ curl -L -X PATCH "http://localhost:8080/api/collectionBoxes/1/event/1"
 
 
 ****
-####  7. Cash addition (PATCH) /api/collectionBoxes/{id}/addCash
-Endpoint is capable of increasing balance of collection box event with user specified name and currency code. Each currencies typ balance is counted separately.
-All of the following parameters are mandatory and must be passed in request body in JSON format.
-- cashAmount (text representation of a number starting with 1 to 7 digits, followed by a period, and ending with exactly 2 digits)
-- currencyCode (must follow ISO 4217 format, for now supported currencies are limited to PLN, EUR and USD)
+####  7. Cash addition (PATCH) /collectionBoxes/{id}/addCash
+Endpoint is capable of increasing balance of collection box event by user specified amount of currency, while keeping the balance of each currency separately.
+All the following parameters are mandatory and must be passed in request body in JSON format.
+- cashAmount (text representation of a number starting with 1 to 7 digits, followed by a period, and ending with exactly 2 digits, it must be greater than 0 )
+- currencyCode (must follow ISO 4217 format, right now currencies are limited to PLN, EUR and USD)
 
 ##### Example curl
 ```cmd
@@ -163,9 +183,9 @@ curl -L -X PATCH "http://localhost:8080/api/collectionBoxes/1/addCash" -H "Conte
 ```
 ****
 
-#### 8. Box emptying (PATCH) /api/collectionBoxes/{id}/emptyBox
+#### 8. Box emptying (PATCH) /collectionBoxes/{id}/emptyBox
 Endpoint exchanges the money stored in collection box to the currency specified in the assigned event, after it the money is transferred to the assigned events balance.
-All of the path parameters are mandatory .
+All the path parameters are mandatory .
 - {id}  (id of the assigned collection box, natural number)
 ##### Example curl (cmd)
 ```cmd

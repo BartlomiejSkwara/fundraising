@@ -59,7 +59,7 @@ public class ExchangeRateService {
     public boolean isCurrencyNoted(String currency) {
         return rates.containsKey(currency);
     }
-    public BigDecimal exchangeCurrency(String fromCurrency, BigDecimal currencyAmount, String toCurrency) {
+    public BigDecimal getExchangeRate(String fromCurrency,String toCurrency){
         var from = rates.get(fromCurrency);
         if(from == null) {
             throw new IllegalCurrencyException(fromCurrency);
@@ -69,8 +69,10 @@ public class ExchangeRateService {
             throw new IllegalCurrencyException(toCurrency);
         }
 
-        BigDecimal rate = from.divide(to,8,RoundingMode.HALF_UP);
-        return currencyAmount.multiply(rate);
+        return to.divide(from,11,RoundingMode.HALF_UP);
+    }
+    public BigDecimal exchangeCurrency(String fromCurrency, BigDecimal currencyAmount, String toCurrency) {
+        return currencyAmount.multiply(getExchangeRate(fromCurrency,toCurrency));
     }
 
 
