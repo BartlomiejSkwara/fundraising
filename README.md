@@ -27,7 +27,7 @@ mvnw clean spring-boot:run
 ### Optional (building jar):
 If you want to create a jar file for later deployment first follow steps 1 and 2  (cloning repo and entering directory).
 
-First build the jar using this command (it may take slightly longer due to packaging and tests being run)
+Then build the jar using this command (it may take slightly longer due to packaging and tests being run)
 ```
 mvnw clean package
 ```
