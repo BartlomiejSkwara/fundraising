@@ -25,11 +25,13 @@ mvnw clean spring-boot:run
 ```
 
 ### Optional (building jar):
-If you want to create a jar file for later deployment first follow steps 1 and 2 of running project section (cloning repo and entering directory).
+If you want to create a jar file for later deployment first follow steps 1 and 2  (cloning repo and entering directory).
+
+First build the jar using this command (it may take slightly longer due to packaging and tests being run)
 ```
 mvnw clean package
 ```
-Jar file can be run using following command
+Now jar file can be run using following command
 ```
 java -jar target\fundraising-0.1.0.jar
 ```
@@ -48,7 +50,7 @@ For jar file:
 java -jar target/fundraising-0.1.0.jar --server.port=8081
 ```
 ## Currencies
-Usable currencies are limited to following subset: PLN, EUR, USD. Exchange rate is based on the value of PLN.
+Usable currencies are limited to following subset: PLN, EUR, USD.
 
 During startup app will try to fetch current exchange rates from free open-source Frankfurter api.
 
@@ -60,16 +62,17 @@ PLN (1.0)
 EUR (0.23474)
 USD (0.26277)
 ```
- 
-
+After fetching or failing to fetch app will log the exchange rates, you can see the example of log after successful fetch below.
+```
+2025-05-20T07:59:19.533+02:00  INFO 2420 --- [fundraising] [           main] o.e.f.common.ExchangeRateService         : Successfully fetched exchange rates from frankfurter api {EUR=0.23426, PLN=1.00, USD=0.26382}
+```
 
 
 
 ## REST API Endpoints
 App consists of 8 endpoints that allow manipulation of fundraising events data.
 
-Each endpoint begins with http://localhost:8080/api, unless the user changed the port, in which case replace "8080" with user specified port.
-
+Endpoints are relative to /api under the current host. It means that by default they should start with http://localhost:8080/api, unless the user changed the port, in which case replace "8080" with user specified port.
 
 ### List of all endpoints 
 

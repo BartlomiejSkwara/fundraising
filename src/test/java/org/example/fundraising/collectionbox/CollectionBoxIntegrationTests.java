@@ -51,7 +51,7 @@ public class CollectionBoxIntegrationTests {
     public void testBoxCreation() throws Exception {
         collectionBoxRegistrationRequest().andExpect(status().isCreated());
         assert (cbRepo.count() == 1);
-        CollectionBoxEntity cb = cbRepo.findById(1L).get();
+        CollectionBoxEntity cb = cbRepo.findByIdAndFetchCurrencies(1L).get();
         assert (cb.getEvent() == null);
         assert (cb.getCurrencies() == null);
     }

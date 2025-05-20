@@ -1,7 +1,6 @@
 package org.example.fundraising.event;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.fundraising.common.exceptions.IllegalCurrencyException;
 import org.example.fundraising.event.dto.CreateEventRequest;

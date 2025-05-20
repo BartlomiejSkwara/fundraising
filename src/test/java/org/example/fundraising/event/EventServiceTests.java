@@ -3,7 +3,6 @@ package org.example.fundraising.event;
 import org.example.fundraising.common.ExchangeRateService;
 import org.example.fundraising.common.exceptions.IllegalCurrencyException;
 import org.example.fundraising.event.dto.CreateEventRequest;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
