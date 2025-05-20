@@ -38,7 +38,7 @@ java -jar target\fundraising-0.1.0.jar
 
 ### Issues with used port
 By default, application runs  on port 8080 so if the running process fails make sure that it is not in use. 
-If You want to it is possible to change the used port in following ways:
+It is possible to change the used port in following ways:
 
 For spring:boot run:
 ```
